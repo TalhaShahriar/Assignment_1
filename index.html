@@ -29,23 +29,29 @@
             overflow: hidden;
         }
 
+        /* Improved Loading Spinner */
         .loader {
-            border-top-color: #6366f1;
-            animation: spinner 0.6s linear infinite;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
         }
 
-        @keyframes spinner {
+        @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
+        /* Active State styling */
         .category-btn.active {
-            background-color: #6366f1;
-            color: white;
-            border-color: #6366f1;
+            background-color: #6366f1 !important;
+            color: white !important;
+            border-color: #6366f1 !important;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);
         }
 
-        /* Cart Drawer Styles */
         #cart-drawer {
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -61,14 +67,6 @@
         @keyframes slideUp {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
-        }
-
-        .cart-item-exit {
-            animation: fadeOutRight 0.3s ease-in forwards;
-        }
-
-        @keyframes fadeOutRight {
-            to { transform: translateX(20px); opacity: 0; }
         }
     </style>
 </head>
@@ -122,7 +120,7 @@
                 <span class="text-gray-600 font-medium">Total Price:</span>
                 <span id="cart-total" class="text-2xl font-bold text-gray-900">$0.00</span>
             </div>
-            <button class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-100">
+            <button class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg">
                 Checkout Now
             </button>
         </div>
@@ -132,7 +130,7 @@
     <header class="hero-section flex items-center justify-center text-center text-white">
         <div class="max-w-2xl px-4">
             <h1 class="text-4xl md:text-6xl font-bold mb-4">Best Collection For You</h1>
-            <p class="text-lg md:text-xl mb-8 opacity-90">Discover the latest trends in fashion, electronics, and more. Shop with confidence and style at SwiftCart.</p>
+            <p class="text-lg md:text-xl mb-8 opacity-90">Discover the latest trends in fashion, electronics, and more.</p>
             <a href="#products-section" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-md font-semibold transition-all transform hover:scale-105 inline-block">
                 Shop Now
             </a>
@@ -145,24 +143,18 @@
             <div class="text-center mb-10">
                 <h2 class="text-4xl font-bold mb-8">Our Products</h2>
                 <div id="category-container" class="flex flex-wrap justify-center gap-3 mb-10">
-                    <button class="category-btn active px-6 py-2 rounded-full border border-gray-300 text-sm font-medium transition" data-category="all">All</button>
+                    <button class="category-btn active px-6 py-2 rounded-full border border-gray-300 text-sm font-medium transition hover:border-indigo-600" data-category="all">All</button>
                 </div>
             </div>
 
-            <div id="product-loader" class="flex justify-center py-20">
-                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+            <!-- Enhanced Loader -->
+            <div id="product-loader" class="flex justify-center items-center py-24 hidden">
+                <div class="loader"></div>
             </div>
 
             <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-500 py-12">
-        <div class="container mx-auto px-4 text-center text-sm">
-            &copy; 2025 SwiftCart, Inc. All rights reserved.
-        </div>
-    </footer>
 
     <!-- Product Details Modal -->
     <div id="product-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
@@ -201,12 +193,10 @@
         const productLoader = document.getElementById('product-loader');
         const categoryContainer = document.getElementById('category-container');
         const cartCountEl = document.getElementById('cart-count');
-        
         const cartDrawer = document.getElementById('cart-drawer');
         const cartOverlay = document.getElementById('cart-overlay');
         const cartItemsList = document.getElementById('cart-items-list');
         const cartTotalEl = document.getElementById('cart-total');
-
         const modal = document.getElementById('product-modal');
         const modalImage = document.getElementById('modal-image');
         const modalTitle = document.getElementById('modal-title');
@@ -228,16 +218,24 @@
         }
 
         async function fetchProducts(category = 'all') {
+            // Show Spinner, Hide Grid
             productLoader.classList.remove('hidden');
-            productGrid.innerHTML = '';
+            productGrid.classList.add('hidden');
+            
             try {
                 let url = category === 'all' ? 'https://fakestoreapi.com/products' : `https://fakestoreapi.com/products/category/${encodeURIComponent(category)}`;
                 const res = await fetch(url);
                 const products = await res.json();
                 allProducts = products;
                 renderProducts(products);
-            } catch (err) { console.error(err); } 
-            finally { productLoader.classList.add('hidden'); }
+            } catch (err) { 
+                console.error(err); 
+                productGrid.innerHTML = `<p class="col-span-full text-center py-10 text-red-500">Failed to load products. Please try again.</p>`;
+            } finally {
+                // Hide Spinner, Show Grid
+                productLoader.classList.add('hidden');
+                productGrid.classList.remove('hidden');
+            }
         }
 
         function toggleCart(isOpen) {
@@ -259,7 +257,7 @@
         function addToCart(productId) {
             const product = allProducts.find(p => p.id === productId);
             if (product) {
-                cartItems.push({...product, cartId: Date.now() + Math.random()}); // Unique ID for removal
+                cartItems.push({...product, cartId: Date.now() + Math.random()});
                 updateCartUI();
                 showToast(`"${product.title.substring(0, 15)}..." added to cart!`, 'green');
             }
@@ -280,30 +278,21 @@
 
         function updateCartUI() {
             cartCountEl.textContent = cartItems.length;
-            
             if (cartItems.length === 0) {
-                cartItemsList.innerHTML = `
-                    <div class="text-center py-20 text-gray-400">
-                        <i class="fas fa-cart-arrow-down text-5xl mb-4"></i>
-                        <p>Your cart is empty.</p>
-                    </div>`;
+                cartItemsList.innerHTML = `<div class="text-center py-20 text-gray-400"><i class="fas fa-cart-arrow-down text-5xl mb-4"></i><p>Your cart is empty.</p></div>`;
                 cartTotalEl.textContent = "$0.00";
                 return;
             }
-
             cartItemsList.innerHTML = cartItems.map((item) => `
-                <div id="item-${item.cartId}" class="flex items-center gap-4 bg-white p-3 rounded-xl border border-gray-100 shadow-sm transition-all">
-                    <img src="${item.image}" class="w-16 h-16 object-contain p-1 bg-white" alt="">
+                <div class="flex items-center gap-4 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                    <img src="${item.image}" class="w-16 h-16 object-contain p-1" alt="">
                     <div class="flex-grow">
                         <h4 class="font-bold text-xs line-clamp-1">${item.title}</h4>
                         <p class="text-indigo-600 font-bold text-sm">$${item.price}</p>
                     </div>
-                    <button onclick="removeFromCart(${item.cartId})" class="text-red-400 hover:text-red-600 p-2 transition">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
+                    <button onclick="removeFromCart(${item.cartId})" class="text-red-400 hover:text-red-600 p-2"><i class="fas fa-trash-alt"></i></button>
                 </div>
             `).join('');
-
             const total = cartItems.reduce((sum, item) => sum + item.price, 0);
             cartTotalEl.textContent = `$${total.toFixed(2)}`;
         }
@@ -311,18 +300,11 @@
         function showToast(message, color) {
             const container = document.getElementById('notification-container');
             const toast = document.createElement('div');
-            const colors = {
-                green: 'bg-indigo-600 border-indigo-500',
-                red: 'bg-red-600 border-red-500',
-                gray: 'bg-gray-800 border-gray-700'
-            };
-            toast.className = `toast-notification ${colors[color] || colors.green} text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border`;
-            toast.innerHTML = `<i class="fas ${color === 'red' ? 'fa-trash' : 'fa-check-circle'}"></i> <span class="font-medium text-sm">${message}</span>`;
+            const colors = { green: 'bg-indigo-600', red: 'bg-red-600', gray: 'bg-gray-800' };
+            toast.className = `toast-notification ${colors[color]} text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3`;
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> <span class="font-medium text-sm">${message}</span>`;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'transition-opacity', 'duration-500');
-                setTimeout(() => toast.remove(), 500);
-            }, 2500);
+            setTimeout(() => { toast.classList.add('opacity-0'); setTimeout(() => toast.remove(), 500); }, 2500);
         }
 
         function openProductDetail(id) {
@@ -340,9 +322,11 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function closeModal() {
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
+        function closeModal() { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+        function setActiveCategory(btn) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
 
         function renderCategories(categories) {
@@ -351,9 +335,8 @@
                 btn.className = "category-btn px-6 py-2 rounded-full border border-gray-300 text-sm font-medium transition hover:border-indigo-600 capitalize";
                 btn.textContent = cat;
                 btn.setAttribute('data-category', cat);
-                btn.onclick = () => {
-                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+                btn.onclick = (e) => {
+                    setActiveCategory(e.target);
                     fetchProducts(cat);
                 };
                 categoryContainer.appendChild(btn);
@@ -362,22 +345,20 @@
 
         function renderProducts(products) {
             productGrid.innerHTML = products.map(product => `
-                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col">
-                    <div class="relative p-6 flex items-center justify-center h-64 cursor-pointer" onclick="openProductDetail(${product.id})">
-                        <img src="${product.image}" alt="${product.title}" class="max-h-full object-contain group-hover:scale-105 transition duration-500">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col">
+                    <div class="p-6 flex items-center justify-center h-64 cursor-pointer" onclick="openProductDetail(${product.id})">
+                        <img src="${product.image}" alt="${product.title}" class="max-h-full object-contain hover:scale-105 transition duration-500">
                     </div>
                     <div class="p-5 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-2">
                             <span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-full uppercase">${product.category}</span>
-                            <div class="flex items-center text-yellow-500 text-sm font-bold">
-                                <i class="fas fa-star mr-1"></i><span>${product.rating.rate}</span>
-                            </div>
+                            <div class="text-yellow-500 text-sm font-bold"><i class="fas fa-star mr-1"></i>${product.rating.rate}</div>
                         </div>
                         <h3 class="font-bold text-gray-900 mb-2 line-clamp-2 h-10 text-sm">${product.title}</h3>
                         <div class="text-xl font-bold text-gray-900 mt-auto">$${product.price}</div>
                         <div class="grid grid-cols-2 gap-3 mt-4">
-                            <button onclick="openProductDetail(${product.id})" class="text-xs font-bold border border-gray-200 py-2.5 rounded-lg hover:bg-gray-50 transition">Details</button>
-                            <button onclick="addToCart(${product.id})" class="text-xs font-bold bg-indigo-600 text-white py-2.5 rounded-lg hover:bg-indigo-700 transition">Add to Cart</button>
+                            <button onclick="openProductDetail(${product.id})" class="text-xs font-bold border border-gray-200 py-2.5 rounded-lg hover:bg-gray-50">Details</button>
+                            <button onclick="addToCart(${product.id})" class="text-xs font-bold bg-indigo-600 text-white py-2.5 rounded-lg hover:bg-indigo-700">Add to Cart</button>
                         </div>
                     </div>
                 </div>
@@ -387,9 +368,9 @@
         window.onload = () => {
             fetchCategories();
             fetchProducts('all');
-            document.querySelector('[data-category="all"]').onclick = function() {
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
+            const allBtn = document.querySelector('[data-category="all"]');
+            allBtn.onclick = (e) => {
+                setActiveCategory(e.target);
                 fetchProducts('all');
             };
         };
