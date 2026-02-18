@@ -44,11 +44,19 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Category Button Active State */
         .category-btn.active {
             background-color: #6366f1;
             color: white;
             border-color: #6366f1;
+        }
+
+        .toast-notification {
+            animation: slideUp 0.3s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
@@ -56,23 +64,23 @@
 
     <!-- Navbar -->
     <nav class="sticky top-0 z-50 bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex flex-wrap justify-between items-center">
-            <div class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-indigo-600 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
                 <i class="fas fa-shopping-cart"></i>
                 <span>SwiftCart</span>
             </div>
             
             <ul class="hidden md:flex space-x-8 font-medium">
                 <li><a href="#" class="hover:text-indigo-600 transition">Home</a></li>
-                <li><a href="#products-section" class="text-indigo-600">Products</a></li>
+                <li><a href="#products-section" class="hover:text-indigo-600 transition">Products</a></li>
                 <li><a href="#" class="hover:text-indigo-600 transition">About</a></li>
                 <li><a href="#" class="hover:text-indigo-600 transition">Contact</a></li>
             </ul>
 
             <div class="flex items-center gap-4">
-                <button class="relative p-2 hover:bg-gray-100 rounded-full transition">
+                <button class="relative p-2 hover:bg-gray-100 rounded-full transition group">
                     <i class="fas fa-shopping-bag text-xl"></i>
-                    <span id="cart-count" class="absolute -top-1 -right-1 bg-indigo-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-indigo-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold transition-transform group-active:scale-125">0</span>
                 </button>
                 <button class="md:hidden text-2xl" id="mobile-menu-btn">
                     <i class="fas fa-bars"></i>
@@ -86,7 +94,7 @@
         <div class="max-w-2xl px-4">
             <h1 class="text-4xl md:text-6xl font-bold mb-4">Best Collection For You</h1>
             <p class="text-lg md:text-xl mb-8 opacity-90">Discover the latest trends in fashion, electronics, and more. Shop with confidence and style at SwiftCart.</p>
-            <a href="#products-section" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-md font-semibold transition-all transform hover:scale-105">
+            <a href="#products-section" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-md font-semibold transition-all transform hover:scale-105 inline-block">
                 Shop Now
             </a>
         </div>
@@ -137,11 +145,8 @@
         <div class="container mx-auto px-4">
             <div class="text-center mb-10">
                 <h2 class="text-4xl font-bold mb-8">Our Products</h2>
-                
-                <!-- Category Filters -->
                 <div id="category-container" class="flex flex-wrap justify-center gap-3 mb-10">
                     <button class="category-btn active px-6 py-2 rounded-full border border-gray-300 text-sm font-medium transition hover:border-indigo-600" data-category="all">All</button>
-                    <!-- Categories will be injected here -->
                 </div>
             </div>
 
@@ -151,9 +156,7 @@
             </div>
 
             <!-- Product Grid -->
-            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <!-- Products will be injected here -->
-            </div>
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
         </div>
     </section>
 
@@ -175,43 +178,8 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-100 py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                <div class="md:col-span-1">
-                    <div class="text-2xl font-bold text-indigo-600 mb-6">SwiftCart</div>
-                    <p class="text-gray-500 text-sm leading-relaxed">Your one-stop shop for all your fashion and lifestyle needs. Quality products, fast delivery, and excellent support.</p>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-6">Quick Links</h4>
-                    <ul class="space-y-4 text-gray-500 text-sm">
-                        <li><a href="#" class="hover:text-indigo-600">Home</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Products</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">About</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-6">Support</h4>
-                    <ul class="space-y-4 text-gray-500 text-sm">
-                        <li><a href="#" class="hover:text-indigo-600">FAQ</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Shipping</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Returns</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-6">Follow Us</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 bg-gray-100 flex items-center justify-center rounded-full hover:bg-indigo-600 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="w-10 h-10 bg-gray-100 flex items-center justify-center rounded-full hover:bg-indigo-600 hover:text-white transition"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="w-10 h-10 bg-gray-100 flex items-center justify-center rounded-full hover:bg-indigo-600 hover:text-white transition"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="w-10 h-10 bg-gray-100 flex items-center justify-center rounded-full hover:bg-indigo-600 hover:text-white transition"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="pt-8 border-t border-gray-100 text-center text-sm text-gray-500">
-                &copy; 2025 SwiftCart, Inc. All rights reserved.
-            </div>
+        <div class="container mx-auto px-4 text-center text-sm text-gray-500">
+            &copy; 2025 SwiftCart, Inc. All rights reserved.
         </div>
     </footer>
 
@@ -222,15 +190,12 @@
             <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl z-20">
                 <i class="fas fa-times"></i>
             </button>
-            
             <div class="md:w-1/2 p-8 bg-white flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
                 <img id="modal-image" src="" alt="" class="max-h-[400px] object-contain">
             </div>
-            
             <div class="md:w-1/2 p-8 flex flex-col">
                 <div id="modal-category" class="text-indigo-600 text-xs font-bold uppercase tracking-widest mb-2">Category</div>
                 <h2 id="modal-title" class="text-2xl font-bold mb-4">Product Title</h2>
-                
                 <div class="flex items-center gap-4 mb-6">
                     <span id="modal-price" class="text-3xl font-bold text-gray-900">$0.00</span>
                     <div class="flex items-center text-yellow-500">
@@ -238,18 +203,17 @@
                         <span id="modal-rating" class="font-semibold text-gray-700">0.0</span>
                     </div>
                 </div>
-                
-                <p id="modal-description" class="text-gray-600 leading-relaxed mb-8 flex-grow">
-                    Product description goes here...
-                </p>
-                
+                <p id="modal-description" class="text-gray-600 leading-relaxed mb-8 flex-grow"></p>
                 <div class="flex gap-4">
                     <button class="flex-1 bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 transition">Buy Now</button>
-                    <button class="flex-1 border-2 border-indigo-600 text-indigo-600 py-4 rounded-xl font-bold hover:bg-indigo-50 transition" onclick="addToCart()">Add to Cart</button>
+                    <button id="modal-add-btn" class="flex-1 border-2 border-indigo-600 text-indigo-600 py-4 rounded-xl font-bold hover:bg-indigo-50 transition">Add to Cart</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Notification Toast Area -->
+    <div id="notification-container" class="fixed bottom-6 right-6 flex flex-col gap-3 z-[200]"></div>
 
     <script>
         const productGrid = document.getElementById('product-grid');
@@ -264,20 +228,19 @@
         const modalPrice = document.getElementById('modal-price');
         const modalRating = document.getElementById('modal-rating');
         const modalDescription = document.getElementById('modal-description');
+        const modalAddBtn = document.getElementById('modal-add-btn');
 
         let allProducts = [];
-        let cartCount = 0;
+        let cartItems = []; // List to store product objects
 
-        // --- Fetch Functions ---
+        // --- API & Core Logic ---
 
         async function fetchCategories() {
             try {
                 const res = await fetch('https://fakestoreapi.com/products/categories');
                 const categories = await res.json();
                 renderCategories(categories);
-            } catch (err) {
-                console.error("Error fetching categories:", err);
-            }
+            } catch (err) { console.error("Error fetching categories:", err); }
         }
 
         async function fetchProducts(category = 'all') {
@@ -285,40 +248,63 @@
             productGrid.innerHTML = '';
             
             try {
-                let url = 'https://fakestoreapi.com/products';
-                if (category !== 'all') {
-                    url = `https://fakestoreapi.com/products/category/${encodeURIComponent(category)}`;
-                }
-                
+                let url = category === 'all' ? 'https://fakestoreapi.com/products' : `https://fakestoreapi.com/products/category/${encodeURIComponent(category)}`;
                 const res = await fetch(url);
                 const products = await res.json();
                 allProducts = products;
                 renderProducts(products);
-            } catch (err) {
-                console.error("Error fetching products:", err);
-            } finally {
-                productLoader.classList.add('hidden');
+            } catch (err) { console.error("Error fetching products:", err); } 
+            finally { productLoader.classList.add('hidden'); }
+        }
+
+        function openProductDetail(id) {
+            const product = allProducts.find(p => p.id === id);
+            if (!product) return;
+            
+            modalImage.src = product.image;
+            modalTitle.textContent = product.title;
+            modalCategory.textContent = product.category;
+            modalPrice.textContent = `$${product.price}`;
+            modalRating.textContent = `${product.rating.rate} (${product.rating.count})`;
+            modalDescription.textContent = product.description;
+            
+            // Set up modal button to add THIS specific product
+            modalAddBtn.onclick = () => {
+                addToCart(product.id);
+                closeModal();
+            };
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // --- Cart Interaction Logic ---
+
+        function addToCart(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (product) {
+                cartItems.push(product); // 1. Adds to list/array
+                updateCartUI(); // 2. Updates Count in Navbar
+                showToast(`"${product.title.substring(0, 20)}..." added to cart!`);
             }
         }
 
-        async function openProductDetail(id) {
-            try {
-                const res = await fetch(`https://fakestoreapi.com/products/${id}`);
-                const product = await res.json();
-                
-                modalImage.src = product.image;
-                modalTitle.textContent = product.title;
-                modalCategory.textContent = product.category;
-                modalPrice.textContent = `$${product.price}`;
-                modalRating.textContent = `${product.rating.rate} (${product.rating.count})`;
-                modalDescription.textContent = product.description;
-                
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                document.body.style.overflow = 'hidden';
-            } catch (err) {
-                console.error("Error fetching product detail:", err);
-            }
+        function updateCartUI() {
+            cartCountEl.textContent = cartItems.length;
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('notification-container');
+            const toast = document.createElement('div');
+            toast.className = "toast-notification bg-indigo-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border border-indigo-400";
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> <span class="font-medium">${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
         }
 
         // --- Render Functions ---
@@ -329,7 +315,11 @@
                 btn.className = "category-btn px-6 py-2 rounded-full border border-gray-300 text-sm font-medium transition hover:border-indigo-600 capitalize";
                 btn.textContent = cat;
                 btn.setAttribute('data-category', cat);
-                btn.onclick = () => filterByCategory(cat);
+                btn.onclick = () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    fetchProducts(cat);
+                };
                 categoryContainer.appendChild(btn);
             });
         }
@@ -337,74 +327,42 @@
         function renderProducts(products) {
             productGrid.innerHTML = products.map(product => `
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col">
-                    <div class="relative p-6 bg-white flex items-center justify-center h-64 overflow-hidden">
-                        <img src="${product.image}" alt="${product.title}" class="max-h-full object-contain group-hover:scale-110 transition duration-500">
+                    <div class="relative p-6 flex items-center justify-center h-64 cursor-pointer" onclick="openProductDetail(${product.id})">
+                        <img src="${product.image}" alt="${product.title}" class="max-h-full object-contain group-hover:scale-105 transition duration-500">
                     </div>
                     <div class="p-5 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-2">
-                            <span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-full uppercase tracking-wider">${product.category}</span>
+                            <span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-full uppercase">${product.category}</span>
                             <div class="flex items-center text-yellow-500 text-sm font-bold">
-                                <i class="fas fa-star mr-1"></i>
-                                <span>${product.rating.rate}</span>
-                                <span class="text-gray-400 font-normal ml-1">(${product.rating.count})</span>
+                                <i class="fas fa-star mr-1"></i><span>${product.rating.rate}</span>
                             </div>
                         </div>
-                        <h3 class="font-bold text-gray-900 mb-2 line-clamp-2 h-12">${product.title}</h3>
-                        <div class="text-2xl font-bold text-gray-900 mt-auto">$${product.price}</div>
+                        <h3 class="font-bold text-gray-900 mb-2 line-clamp-2 h-10 text-sm">${product.title}</h3>
+                        <div class="text-xl font-bold text-gray-900 mt-auto">$${product.price}</div>
                         <div class="grid grid-cols-2 gap-3 mt-4">
-                            <button onclick="openProductDetail(${product.id})" class="text-sm font-bold border border-gray-200 py-2.5 rounded-lg hover:bg-gray-50 flex items-center justify-center gap-2 transition">
-                                <i class="far fa-eye"></i> Details
-                            </button>
-                            <button onclick="addToCart()" class="text-sm font-bold bg-indigo-600 text-white py-2.5 rounded-lg hover:bg-indigo-700 flex items-center justify-center gap-2 transition">
-                                <i class="fas fa-cart-plus"></i> Add
-                            </button>
+                            <button onclick="openProductDetail(${product.id})" class="text-xs font-bold border border-gray-200 py-2.5 rounded-lg hover:bg-gray-50 transition">Details</button>
+                            <button onclick="addToCart(${product.id})" class="text-xs font-bold bg-indigo-600 text-white py-2.5 rounded-lg hover:bg-indigo-700 transition">Add to Cart</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // --- Interaction Logic ---
-
-        function filterByCategory(category) {
-            // Update UI Active State
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => {
-                if(btn.getAttribute('data-category') === category) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-
-            fetchProducts(category);
-        }
-
         function closeModal() {
             modal.classList.add('hidden');
-            modal.classList.remove('flex');
             document.body.style.overflow = 'auto';
         }
 
-        function addToCart() {
-            cartCount++;
-            cartCountEl.textContent = cartCount;
-            // Simple visual feedback instead of alert
-            const toast = document.createElement('div');
-            toast.className = "fixed bottom-4 right-4 bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg z-[200] animate-bounce";
-            toast.textContent = "Added to cart!";
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
-        }
-
-        // --- Initial Load ---
-        document.addEventListener('DOMContentLoaded', () => {
+        // Initialize
+        window.onload = () => {
             fetchCategories();
             fetchProducts('all');
-            
-            // Default filter setup
-            document.querySelector('[data-category="all"]').onclick = () => filterByCategory('all');
-        });
+            document.querySelector('[data-category="all"]').onclick = function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                fetchProducts('all');
+            };
+        };
     </script>
 </body>
 </html>
